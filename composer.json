@@ -1,0 +1,28 @@
+{
+  "name": "sebastianlenz/contentfield-json",
+  "description": "A json and typescript exporter for Craft Contentfield.",
+  "type": "craft-plugin",
+  "license": "MIT",
+  "require": {
+    "ext-curl": "*",
+    "ext-dom": "*",
+    "ext-json": "*",
+    "ext-libxml": "*",
+    "ext-zlib": "*",
+    "php": "^7.2",
+    "craftcms/cms": "^3.6.0",
+    "craftcms/redactor": "^2.8.7",
+    "sebastianlenz/contentfield": "dev-release"
+  },
+  "autoload": {
+    "psr-4": {
+      "lenz\\contentfield\\json\\": "src/"
+    }
+  },
+  "extra": {
+    "handle": "contentfield-json",
+    "name": "Content Field Json Support",
+    "developer": "Sebastian Lenz",
+    "developerUrl": "https://github.com/sebastian-lenz/"
+  }
+}
