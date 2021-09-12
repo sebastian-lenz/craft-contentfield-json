@@ -179,12 +179,13 @@ class Project extends Component
    * @return object|null
    */
   public function toJson($value, string $mode = Plugin::MODE_DEFAULT, State $state = null): ?object {
+    $cacheParts = [];
     if ($value instanceof InstanceValue) {
       $structures = $this->_contentStructures;
-      $uid = $value->getUuid() . ';' . $value->getElement()->siteId;
+      array_push($cacheParts, $value->getUuid(), $value->getElement()->siteId);
     } elseif ($value instanceof ElementInterface) {
       $structures = $this->_elementStructures;
-      $uid = $value->uid . ';' . $value->siteId;
+      array_push($cacheParts, $value->uid, $value->siteId);
     } else {
       return null;
     }
@@ -193,9 +194,10 @@ class Project extends Component
       $state = new State();
     }
 
-    $uid .= ';' . $state->getCacheId();
-    if ($state->useCache && array_key_exists($uid, $this->_cache)) {
-      return $this->_cache[$uid];
+    array_push($cacheParts, $mode, $state->getCacheId());
+    $cacheKey = implode(';', $cacheParts);
+    if ($state->useCache && array_key_exists($cacheKey, $this->_cache)) {
+      return $this->_cache[$cacheKey];
     }
 
     $result = null;
@@ -207,7 +209,7 @@ class Project extends Component
     }
 
     if ($state->useCache) {
-      $this->_cache[$uid] = $result;
+      $this->_cache[$cacheKey] = $result;
     }
 
     return $result;
