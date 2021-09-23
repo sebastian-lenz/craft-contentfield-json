@@ -27,8 +27,10 @@ class Property extends AbstractProperty
   static $IMPLEMENTATIONS = [
     property\ContentProperty::class,
     property\MatrixProperty::class,
+    property\MultiOptionsProperty::class,
     property\NumberProperty::class,
     property\RelationProperty::class,
+    property\SingleOptionProperty::class,
     property\StringProperty::class,
   ];
 
