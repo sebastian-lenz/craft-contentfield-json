@@ -20,6 +20,16 @@ use lenz\contentfield\json\scope\element\Property;
 class RelationProperty extends Property
 {
   /**
+   * @var string
+   */
+  public $mode = Plugin::MODE_REFERENCE;
+
+  /**
+   * @var array|null|false
+   */
+  public $transforms = null;
+
+  /**
    * @inheritDoc
    */
   const TARGETS = [BaseRelationField::class];
@@ -45,7 +55,10 @@ class RelationProperty extends Property
       return null;
     }
 
-    $result = Plugin::toJson($value, Plugin::MODE_REFERENCE, $state);
+    $result = $state->withTransforms($this->transforms, function() use ($value, $state) {
+      return Plugin::toJson($value, $this->mode, $state);
+    });
+
     foreach ($value as $reference) {
       $state->dependsOnElement($reference->uid);
     }

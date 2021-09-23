@@ -98,10 +98,13 @@ abstract class AbstractManager
    * @return array
    */
   protected function findClasses(): array {
-    $itemClass = static::ITEM_CLASS;
-    $segment = static::SEGMENT;
-    $suffix = static::SUFFIX;
     $result = [];
+    $segment = static::SEGMENT;
+    $options = [
+      'itemClass' => static::ITEM_CLASS,
+      'segment' => static::SEGMENT,
+      'suffix' => static::SUFFIX,
+    ];
 
     /** @var Module $module */
     foreach (Craft::$app->modules as $name => $module) {
@@ -111,27 +114,14 @@ abstract class AbstractManager
         continue;
       }
 
-      $path = Craft::parseEnv("@$name/json/$segment");
-      if (!file_exists($path)) {
+      $basePath = Craft::parseEnv("@$name/json/$segment");
+      if (!file_exists($basePath)) {
         continue;
       }
 
-      foreach (scandir($path) as $fileName) {
-        if (substr($fileName, -4) !== '.php') continue;
-        $name = substr($fileName, 0, strlen($fileName) - 4);
-        $className = "$namespace\\json\\$segment\\$name";
-
-        if (
-          !class_exists($className) ||
-          !is_subclass_of($className, $itemClass, true)
-        ) {
-          continue;
-        }
-
-        $name = strtolower($name);
-        self::stripSuffix($name, $suffix);
-        $result[$name] = $className;
-      }
+      self::crawlClasses($result, $basePath, array_merge($options, [
+        'namespace' => $namespace,
+      ]));
     }
 
     return $result;
@@ -140,6 +130,47 @@ abstract class AbstractManager
 
   // Static methods
   // --------------
+
+  /**
+   * @param array $result
+   * @param string $basePath
+   * @param array{itemClass: string, namespace: string, segment: string, suffix:string} $options
+   */
+  static public function crawlClasses(array &$result, string $basePath, array $options): void {
+    if (!file_exists($basePath)) {
+      return;
+    }
+
+    foreach (scandir($basePath) as $fileName) {
+      if ($fileName[0] === '.') {
+        continue;
+      }
+
+      $path = $basePath . DIRECTORY_SEPARATOR . $fileName;
+      if (is_dir($path)) {
+        self::crawlClasses($result, $path, array_merge($options, [
+          'segment' => $options['segment'] . '\\' . $fileName,
+        ]));
+      }
+      else if (substr($fileName, -4) === '.php') {
+        $name = substr($fileName, 0, strlen($fileName) - 4);
+        $className = implode('\\', [
+          $options['namespace'], 'json', $options['segment'], $name
+        ]);
+
+        if (
+          !class_exists($className) ||
+          !is_subclass_of($className, $options['itemClass'], true)
+        ) {
+          continue;
+        }
+
+        $name = strtolower($name);
+        self::stripSuffix($name, $options['suffix']);
+        $result[$name] = $className;
+      }
+    }
+  }
 
   /**
    * @param string $path

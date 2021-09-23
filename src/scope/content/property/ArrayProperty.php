@@ -38,7 +38,7 @@ class ArrayProperty extends Property
    */
   public function exportValue($value, State $state) {
     $result = [];
-    $items = $value instanceof ArrayValue ? $value->getValues() : [];
+    $items = $value instanceof ArrayValue ? $value->getVisibleValues() : [];
     foreach ($items as $item) {
       $result[] = $this->member->exportValue($item, $state);
     }

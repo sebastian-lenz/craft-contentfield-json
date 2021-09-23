@@ -32,7 +32,7 @@ class PropertyCollection
    */
   public function __construct(AbstractStructure $structure, array $properties) {
     $this->_structure = $structure;
-    $this->_properties = $properties;
+    $this->_properties = array_values($properties);
   }
 
   /**
