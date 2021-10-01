@@ -14,6 +14,11 @@ use craft\models\Section;
 class State
 {
   /**
+   * @var array
+   */
+  public $metaData = [];
+
+  /**
    * @var bool
    */
   public $useCache = true;

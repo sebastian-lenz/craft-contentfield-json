@@ -110,7 +110,11 @@ abstract class Structure extends AbstractStructure
         'name' => 'uid',
         'structure' => $this,
         'definitionType' => 'string',
-        'handler' => function(Element $element) {
+        'handler' => function(Element $element, State $state) {
+          if (array_key_exists('generatorUid', $state->metaData)) {
+            return $state->metaData['generatorUid'];
+          }
+
           return $element->uid;
         }
       ]),
@@ -126,7 +130,11 @@ abstract class Structure extends AbstractStructure
         'name' => 'url',
         'structure' => $this,
         'definitionType' => 'string|null',
-        'handler' => function(Element $element) {
+        'handler' => function(Element $element, State $state) {
+          if (array_key_exists('generatorUrl', $state->metaData)) {
+            return $state->metaData['generatorUrl'];
+          }
+
           $url = $element->getUrl();
           return $url ? Plugin::toAlias($url) : null;
         }
