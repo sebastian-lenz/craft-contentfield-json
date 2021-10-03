@@ -31,6 +31,7 @@ class Property extends AbstractProperty
     property\NumberProperty::class,
     property\RedactorProperty::class,
     property\ReferenceProperty::class,
+    property\StringProperty::class,
   ];
 
   /**
