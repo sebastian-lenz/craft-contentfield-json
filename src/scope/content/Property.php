@@ -24,6 +24,7 @@ class Property extends AbstractProperty
    */
   static $IMPLEMENTATIONS = [
     property\ArrayProperty::class,
+    property\BooleanProperty::class,
     property\EnumerationPropery::class,
     property\InstanceProperty::class,
     property\LayoutProperty::class,
