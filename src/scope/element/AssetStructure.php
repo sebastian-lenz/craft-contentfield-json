@@ -154,8 +154,11 @@ class AssetStructure extends Structure
         ]);
 
         $assetGroup->structures[] = $structure;
-        $project->relationTypes['volume:' . $volume->uid] = $structure;
-        $project->relationTypes['folder:' . $folder->uid] = $structure;
+        if ($mode === Plugin::MODE_REFERENCE) {
+          $project->relationTypes['volume:' . $volume->uid] = $structure;
+          $project->relationTypes['folder:' . $folder->uid] = $structure;
+        }
+
         $result[] = $structure;
       }
     }

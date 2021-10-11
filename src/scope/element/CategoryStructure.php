@@ -125,7 +125,10 @@ class CategoryStructure extends Structure
         ]);
 
         $categoryGroup->structures[] = $structure;
-        $project->relationTypes['group:' . $group->uid] = $structure;
+        if ($mode === Plugin::MODE_REFERENCE) {
+          $project->relationTypes['group:' . $group->uid] = $structure;
+        }
+
         $result[] = $structure;
       }
     }

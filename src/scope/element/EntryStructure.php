@@ -136,7 +136,7 @@ class EntryStructure extends Structure
           'name' => self::join('Any', $section->handle, 'Entry', $suffix)
         ]);
 
-        if ($mode === Plugin::MODE_DEFAULT) {
+        if ($mode === Plugin::MODE_REFERENCE) {
           $project->relationTypes['section:' . $section->uid] = $sectionGroup;
         }
 
