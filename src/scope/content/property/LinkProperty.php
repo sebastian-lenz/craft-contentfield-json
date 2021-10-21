@@ -2,6 +2,7 @@
 
 namespace lenz\contentfield\json\scope\content\property;
 
+use Exception;
 use lenz\contentfield\json\Plugin;
 use lenz\contentfield\json\scope\content\Property;
 use lenz\contentfield\json\scope\State;
@@ -24,10 +25,20 @@ class LinkProperty extends Property
 
   /**
    * @inheritDoc
+   * @throws Exception
    */
   public function exportValue($value, State $state) {
     if (!$value instanceof LinkValue) {
       return null;
+    }
+
+    try {
+      $element = $value->getLinkedElement();
+      if ($element) {
+        $state->dependsOnElement($element);
+      }
+    } catch (Throwable $error) {
+      // Ignore for now
     }
 
     return [
