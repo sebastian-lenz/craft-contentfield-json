@@ -28,7 +28,7 @@ class LinkProperty extends Property
    * @throws Exception
    */
   public function exportValue($value, State $state) {
-    if (!$value instanceof LinkValue) {
+    if (!($value instanceof LinkValue) || !$value->hasValue()) {
       return null;
     }
 
@@ -53,6 +53,6 @@ class LinkProperty extends Property
    * @throws Throwable
    */
   public function getDefinitionType(): string {
-    return 'contentfield.Link';
+    return 'contentfield.Link | null';
   }
 }
