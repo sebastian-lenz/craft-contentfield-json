@@ -108,7 +108,7 @@ abstract class AbstractManager
 
     /** @var Module $module */
     foreach (Craft::$app->modules as $name => $module) {
-      $className = get_class($module);
+      $className = is_object($module) ? get_class($module) : $module;
       $namespace = substr($className, 0, strrpos($className, '\\'));
       if (empty($namespace)) {
         continue;
